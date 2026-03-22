@@ -13,9 +13,10 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchPayments = async () => {
       try {
+        const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
         const url = departmentFilter
-          ? `http://localhost:5000/api/admin/payments?department=${departmentFilter}`
-          : 'http://localhost:5000/api/admin/payments';
+          ? `${API_BASE}/admin/payments?department=${departmentFilter}`
+          : `${API_BASE}/admin/payments`;
         const res = await axios.get(url);
         setPayments(res.data);
       } catch (err) {

@@ -27,7 +27,8 @@ const PaymentForm = () => {
         throw new Error('Passport photo is required');
       }
 
-      const res = await axios.post('http://localhost:5000/api/payments/initialize', formData, {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const res = await axios.post(`${API_BASE}/payments/initialize`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       window.location.href = res.data.authorization_url;
