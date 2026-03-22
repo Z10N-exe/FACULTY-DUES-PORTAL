@@ -1,4 +1,16 @@
 @import "tailwindcss";
+@config "../tailwind.config.js";
+
+:root {
+  --primary: #0A8F3C;
+  --secondary: #E8F5E9;
+  --secondary-dark: #C8E6C9;
+}
+
+@theme {
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+}
 
 body {
   background-color: #f8fafc;

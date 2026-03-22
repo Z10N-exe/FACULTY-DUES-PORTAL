@@ -5,13 +5,13 @@ import { FaGraduationCap } from 'react-icons/fa';
 const Home = () => {
   return (
     <main id="home-main" className="min-h-[calc(100vh-64px)] bg-white flex flex-col items-center justify-center p-6 sm:p-8">
-      <section id="hero-section" aria-labelledby="hero-title" className="max-w-2xl w-full text-center py-8 sm:py-16">
-        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl flex items-center justify-center mx-auto mb-8 rotate-3 hover:rotate-0 transition-transform duration-500" style={{backgroundColor:'rgba(10,143,60,0.08)'}}>
-          <FaGraduationCap className="text-5xl sm:text-6xl" style={{color:'#0A8F3C'}} aria-hidden="true" />
+      <section id="hero-section" aria-labelledby="hero-title" className="max-w-2xl w-full text-center py-6 sm:py-16">
+        <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl flex items-center justify-center mx-auto mb-6 sm:mb-8 rotate-3 hover:rotate-0 transition-transform duration-500" style={{backgroundColor:'rgba(10,143,60,0.08)', width: '64px', height: '64px'}}>
+          <FaGraduationCap className="text-4xl sm:text-6xl" style={{color:'#0A8F3C', fontSize: '36px'}} aria-hidden="true" />
         </div>
         
-        <h1 id="hero-title" className="text-3xl sm:text-5xl lg:text-6xl font-black text-gray-900 mb-6 tracking-tight leading-tight">
-          Faculty <br className="sm:hidden" /> <span style={{color:'#0A8F3C'}}>Dues Portal</span>
+        <h1 id="hero-title" className="text-2xl sm:text-5xl lg:text-6xl font-black text-gray-900 mb-4 sm:mb-6 tracking-tight leading-tight uppercase">
+          Faculty <br /> <span style={{color:'#0A8F3C'}}>Dues Portal</span>
         </h1>
         <div className="w-12 h-1.5 mx-auto mb-8 rounded-full" style={{backgroundColor:'#0A8F3C'}}></div>
         

@@ -78,11 +78,11 @@ const PaymentForm = () => {
                <span className="mr-2">&larr;</span> Back to Home
             </Link>
             
-            <div className="flex items-center gap-3 mb-8 sm:mb-10 mt-4">
-              <img src="/UNIPORT-LOGO-PNG.png" alt="UniPort Logo" className="h-8 sm:h-10 w-auto" />
-              <img src="/NACOSLOGO.jpeg" alt="NACOS Logo" className="h-8 sm:h-10 w-auto rounded-full" />
-              <div className="pl-3 border-l-2 border-[#0A8F3C]/20">
-                <h3 className="text-[10px] sm:text-xs font-black text-slate-800 uppercase tracking-widest leading-tight">Faculty of Computing<br/>University of Port Harcourt</h3>
+            <div className="flex items-center gap-3 mb-6 sm:mb-10 mt-4">
+              <img src="/UNIPORT-LOGO-PNG.png" alt="UniPort Logo" className="h-8 sm:h-10 w-auto" style={{ height: '32px', width: 'auto' }} />
+              <img src="/NACOSLOGO.jpeg" alt="NACOS Logo" className="h-8 sm:h-10 w-auto rounded-full" style={{ height: '32px', width: '32px' }} />
+              <div className="pl-3 border-l-2 border-[#0A8F3C]/20 ml-1">
+                <h3 className="text-[9px] sm:text-xs font-black text-slate-800 uppercase tracking-widest leading-tight">Faculty of Computing<br/>UniPort</h3>
               </div>
             </div>
 

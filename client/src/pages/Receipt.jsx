@@ -114,6 +114,7 @@ const Receipt = () => {
                   alt="Student Passport" 
                   crossOrigin="anonymous"
                   className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-[2rem] object-cover border-4 border-white shadow-xl"
+                  style={{ width: '112px', height: '112px', objectFit: 'cover' }}
                 />
               </div>
             ) : (

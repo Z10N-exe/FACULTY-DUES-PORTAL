@@ -8,11 +8,12 @@ const Header = () => {
         
         {/* Left Side: UNIPORT Logo & Text */}
         <div className="flex items-center space-x-2 sm:space-x-4">
-          <Link to="/" className="flex-shrink-0 hover:scale-105 transition-transform duration-300">
+          <Link to="/" className="flex-shrink-0 hover:scale-105 transition-transform duration-300 block">
             <img 
               src="/UNIPORT-LOGO-PNG.png" 
               alt="UNIPORT Logo" 
               className="h-10 w-auto sm:h-14 object-contain drop-shadow-sm" 
+              style={{ height: '40px', width: 'auto' }}
             />
           </Link>
           <div className="hidden md:block">
@@ -24,7 +25,7 @@ const Header = () => {
         {/* Center/Mobile Title */}
         <div className="md:hidden flex-grow text-center px-1">
             <h1 className="text-sm font-black text-gray-900 leading-tight uppercase tracking-tighter">Faculty <span className="text-[#0A8F3C]">Dues</span></h1>
-            <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Portal</p>
+            <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest leading-none mt-0.5 whitespace-nowrap">Official Portal</p>
         </div>
 
         {/* Right Side: NACOS Logo & Text */}
@@ -33,12 +34,13 @@ const Header = () => {
             <h1 className="text-base lg:text-lg font-black text-gray-900 leading-tight uppercase tracking-tight">NACOS <br/> Chapter</h1>
             <p className="text-[10px] lg:text-xs text-[#0A8F3C] font-bold uppercase tracking-widest mt-0.5">Dues Portal</p>
           </div>
-          <Link to="/" className="flex-shrink-0 hover:scale-105 transition-transform duration-300 relative group">
-            <div className="absolute inset-0 rounded-full bg-[#0A8F3C] animate-ping opacity-10 group-hover:opacity-20"></div>
+          <Link to="/" className="flex-shrink-0 hover:scale-105 transition-transform duration-300 relative group flex items-center justify-center">
+            <div className="absolute inset-0 rounded-full bg-[#0A8F3C] animate-ping opacity-10 group-hover:opacity-20 h-10 w-10 sm:h-14 sm:w-14"></div>
             <img 
               src="/NACOSLOGO.jpeg" 
               alt="NACOS Logo" 
               className="h-10 w-10 sm:h-14 sm:w-14 rounded-full object-cover shadow-md border-2 border-[#0A8F3C] relative z-10" 
+              style={{ height: '40px', width: '40px' }}
             />
           </Link>
         </div>
