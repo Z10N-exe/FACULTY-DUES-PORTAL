@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { loginAdmin, getPayments } = require('../controllers/adminController');
-const { protect } = require('../middleware/authMiddleware');
 
 router.post('/login', loginAdmin);
-router.get('/payments', protect, getPayments);
+router.get('/payments', getPayments);
 
 module.exports = router;

@@ -3,7 +3,8 @@ const axios = require('axios');
 
 const initializePayment = async (req, res) => {
   try {
-    const { regNo, email, firstName, surname, middleName, department, passportUrl, amount } = req.body;
+    const { regNo, email, firstName, surname, middleName, level, department } = req.body;
+    let amount = 2000;
 
     // Check if a payment for this reg no already exists
     const existingPayment = await Payment.findOne({ regNo, status: 'paid' });
@@ -11,9 +12,17 @@ const initializePayment = async (req, res) => {
       return res.status(400).json({ message: 'A payment has already been made for this Registration Number.' });
     }
 
+    if (!req.file) {
+      return res.status(400).json({ message: 'Passport photo file is required.' });
+    }
+
+    // Convert image buffer to Base64 String to store in MongoDB directly
+    const base64Image = req.file.buffer.toString('base64');
+    const passportUrl = `data:${req.file.mimetype};base64,${base64Image}`;
+
     // Create a pending payment record
     const newPayment = await Payment.create({
-      regNo, email, firstName, surname, middleName, department, passportUrl, amount
+      regNo, email, firstName, surname, middleName, level, department, passportUrl, amount
     });
 
     // Initialize Paystack Checkout
