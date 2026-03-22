@@ -74,17 +74,23 @@ const Receipt = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4 flex flex-col items-center">
-      <Link to="/" className="fixed top-6 left-6 flex items-center text-gray-500 hover:text-primary transition font-semibold">
-        <FaArrowLeft className="mr-2" /> Back Home
+    <div className="min-h-screen bg-gray-50 py-8 sm:py-12 px-4 flex flex-col items-center">
+      <Link to="/" className="fixed top-4 left-4 sm:top-6 sm:left-6 z-50 flex items-center justify-center w-10 h-10 sm:w-auto sm:h-auto bg-white/80 backdrop-blur-md sm:bg-transparent rounded-full border border-gray-100 sm:border-0 shadow-sm sm:shadow-none text-gray-500 hover:text-[#0A8F3C] transition-all group">
+        <FaArrowLeft className="sm:mr-2 group-hover:-translate-x-1 transition-transform" /> 
+        <span className="hidden sm:inline font-semibold">Back Home</span>
       </Link>
       
-      <div id="receipt-card" className="bg-white max-w-lg w-full rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden mb-8 transform transition-all">
-        <div className="bg-primary p-8 text-center text-white relative">
-          <FaCheckCircle className="text-6xl mx-auto mb-4 text-secondary/90 shadow-sm rounded-full" />
-          <h2 className="text-3xl font-black uppercase tracking-widest">Payment<br/>Successful</h2>
-          <p className="opacity-80 mt-2 font-medium tracking-wide">Official Faculty Dues Receipt</p>
-          <div className="absolute -top-10 -left-10 w-40 h-40 bg-white opacity-10 rounded-full"></div>
+      <div id="receipt-card" className="bg-white max-w-lg w-full rounded-3xl shadow-2xl overflow-hidden mb-8 transform transition-all border border-gray-100">
+        <div className="bg-[#0A8F3C] p-8 sm:p-10 text-center text-white relative">
+          <div className="relative z-10">
+            <FaCheckCircle className="text-5xl sm:text-6xl mx-auto mb-4 text-white/90 drop-shadow-lg" />
+            <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-widest leading-tight">Payment<br/>Successful</h2>
+            <p className="opacity-80 mt-2 text-xs sm:text-sm font-bold uppercase tracking-[0.2em]">Official Faculty Receipt</p>
+          </div>
+          <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div className="absolute -top-10 -left-10 w-40 h-40 bg-white opacity-5 rounded-full"></div>
+            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-black opacity-5 rounded-full"></div>
+          </div>
         </div>
         
         <div className="p-8 sm:p-10">
@@ -99,21 +105,24 @@ const Receipt = () => {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8 text-center sm:text-left">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 mb-10 text-center sm:text-left">
             {payment.passportUrl ? (
-              <img 
-                src={payment.passportUrl} 
-                alt="Student Passport" 
-                crossOrigin="anonymous"
-                className="w-28 h-28 rounded-2xl object-cover border-4 border-secondary shadow-md"
-              />
+              <div className="relative group">
+                <div className="absolute -inset-1.5 bg-[#0A8F3C]/20 rounded-[2rem] blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                <img 
+                  src={payment.passportUrl} 
+                  alt="Student Passport" 
+                  crossOrigin="anonymous"
+                  className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-[2rem] object-cover border-4 border-white shadow-xl"
+                />
+              </div>
             ) : (
-              <div className="w-28 h-28 rounded-2xl bg-gray-200 flex items-center justify-center text-gray-400">No Photo</div>
+              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-[2rem] bg-gray-50 border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-400 font-bold uppercase text-[10px] tracking-widest">No Passport</div>
             )}
-            <div className="pt-2">
-              <h3 className="text-2xl font-black text-gray-800 leading-tight">{payment.firstName} {payment.surname}</h3>
-              <p className="text-lg font-bold text-primary mt-1">{payment.regNo}</p>
-              <p className="text-gray-500 font-medium mt-1">{payment.department}</p>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-2xl sm:text-3xl font-black text-slate-800 leading-tight truncate">{payment.firstName} {payment.surname}</h3>
+              <p className="text-lg sm:text-xl font-black text-[#0A8F3C] mt-1 tracking-tight">{payment.regNo}</p>
+              <p className="text-gray-400 font-bold uppercase text-[10px] sm:text-xs mt-2 tracking-widest">{payment.department}</p>
             </div>
           </div>
 

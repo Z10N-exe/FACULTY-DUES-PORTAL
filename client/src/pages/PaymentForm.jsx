@@ -52,12 +52,25 @@ const PaymentForm = () => {
       </section>
 
       {/* Main Card Container */}
-      <section id="payment-card-container" className="max-w-6xl w-full mx-auto relative mt-16">
-        {/* Background Green Shape */}
-        <div className="absolute inset-0 bg-[#0A8F3C] rounded-[2rem] transform scale-y-[1.03] scale-x-[0.98] -z-10 shadow-2xl" aria-hidden="true"></div>
-        
+      <section id="payment-card-container" className="max-w-6xl w-full mx-auto relative mt-8 sm:mt-16">
         {/* Foreground White Card */}
-        <div className="bg-white rounded-[2rem] p-6 sm:p-10 shadow-xl border border-gray-100 flex flex-col md:flex-row gap-8 lg:gap-16">
+        <div className="bg-white rounded-3xl sm:rounded-[2rem] p-5 sm:p-10 shadow-2xl border border-gray-100 flex flex-col lg:flex-row gap-8 lg:gap-16">
+          
+          {/* Mobile-Only Quick Info Summary */}
+          <div className="lg:hidden bg-[#0A8F3C]/5 rounded-2xl p-6 border border-[#0A8F3C]/10 mb-2">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-gray-500 text-xs font-bold uppercase tracking-widest mb-1">Total Due</p>
+                <h2 className="text-3xl font-black text-slate-800 tracking-tight">₦2,000</h2>
+              </div>
+              <div className="text-right">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0A8F3C] text-white text-[10px] font-black uppercase tracking-widest shadow-md shadow-[#0A8F3C]/20">
+                  <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse"></span> Secure
+                </span>
+                <p className="text-[10px] text-gray-400 mt-2 font-bold uppercase tracking-widest">Faculty Dues</p>
+              </div>
+            </div>
+          </div>
           
           {/* Left Column - Form */}
           <div className="flex-1">
@@ -65,11 +78,11 @@ const PaymentForm = () => {
                <span className="mr-2">&larr;</span> Back to Home
             </Link>
             
-            <div className="flex items-center gap-3 mb-10 mt-4">
-              <img src="/UNIPORT-LOGO-PNG.png" alt="UniPort Logo" className="h-10 w-auto" />
-              <img src="/NACOSLOGO.jpeg" alt="NACOS Logo" className="h-10 w-auto rounded-full" />
-              <div className="pl-2 border-l-2 border-primary/20">
-                <h3 className="text-xs font-black text-slate-800 uppercase tracking-widest leading-tight">Faculty of Computing<br/>University of Port Harcourt</h3>
+            <div className="flex items-center gap-3 mb-8 sm:mb-10 mt-4">
+              <img src="/UNIPORT-LOGO-PNG.png" alt="UniPort Logo" className="h-8 sm:h-10 w-auto" />
+              <img src="/NACOSLOGO.jpeg" alt="NACOS Logo" className="h-8 sm:h-10 w-auto rounded-full" />
+              <div className="pl-3 border-l-2 border-[#0A8F3C]/20">
+                <h3 className="text-[10px] sm:text-xs font-black text-slate-800 uppercase tracking-widest leading-tight">Faculty of Computing<br/>University of Port Harcourt</h3>
               </div>
             </div>
 
@@ -199,10 +212,10 @@ const PaymentForm = () => {
             </form>
           </div>
 
-          {/* Right Column - Info */}
-          <aside className="w-full lg:w-[400px] bg-[#F5F9F6] rounded-2xl p-8 flex flex-col pt-12" aria-labelledby="instructions-heading">
+          {/* Right Column - Info (Hidden on Desktop/Tablet, but we use lg:flex for layout) */}
+          <aside className="w-full lg:w-[400px] bg-[#F9FBFA] rounded-2xl p-6 sm:p-8 flex flex-col pt-8 sm:pt-12" aria-labelledby="instructions-heading">
             
-            <div className="text-center mb-10">
+            <div className="hidden lg:block text-center mb-10">
               <p className="text-gray-500 font-semibold mb-1">Total amount</p>
               <h2 className="text-4xl md:text-5xl font-black text-slate-800 tracking-tight">₦2,000</h2>
               <p className="text-[#0A8F3C] font-semibold text-sm mt-2 flex items-center justify-center gap-1">
