@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { FaUserCircle, FaSchool, FaIdCard, FaLock, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 
 const PaymentForm = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -12,245 +12,197 @@ const PaymentForm = () => {
     setLoading(true);
     setErrorMsg('');
     try {
-      const formData = new FormData();
-      formData.append('regNo', data.regNo);
-      formData.append('email', data.email);
-      formData.append('firstName', data.firstName);
-      formData.append('surname', data.surname);
-      formData.append('middleName', data.middleName || '');
-      formData.append('level', data.level);
-      formData.append('department', data.department);
-      
-      if (data.passport && data.passport[0]) {
-        formData.append('passport', data.passport[0]);
-      } else {
-        throw new Error('Passport photo is required');
-      }
-
-      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-      const res = await axios.post(`${API_BASE}/payments/initialize`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+      const res = await axios.post('http://localhost:5000/api/payments/initialize', {
+        ...data,
+        amount: 2000
       });
       window.location.href = res.data.authorization_url;
     } catch (err) {
-      setErrorMsg(err.response?.data?.message || err.message || 'Payment initialization failed. Please try again.');
+      setErrorMsg(err.response?.data?.message || 'We encountered an error initializing your payment. Please ensure your details are correct.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main id="payment-main" className="min-h-screen bg-[#F9FCFA] pt-12 pb-20 px-4 sm:px-6 lg:px-8">
-      {/* Title Section */}
-      <section id="payment-header" aria-labelledby="form-heading" className="text-center mb-10 max-w-3xl mx-auto">
-        <h1 id="form-heading" className="text-3xl md:text-5xl font-black text-slate-800 tracking-tight mb-4">
-          Welcome to Your Faculty Payment Portal
-        </h1>
-        <p className="text-gray-500 font-semibold text-sm md:text-base">
-          Pay your faculty dues securely in just a few clicks.
-        </p>
-      </section>
-
-      {/* Main Card Container */}
-      <section id="payment-card-container" className="max-w-6xl w-full mx-auto relative mt-8 sm:mt-16">
-        {/* Foreground White Card */}
-        <div className="bg-white rounded-3xl sm:rounded-[2rem] p-5 sm:p-10 shadow-2xl border border-gray-100 flex flex-col lg:flex-row gap-8 lg:gap-16">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-12 px-4 shadow-inner">
+      <div className="max-w-2xl w-full bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-100">
+        {/* Modern Header */}
+        <div className="bg-primary px-8 py-10 text-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-black/10 rounded-full -ml-16 -mb-16 blur-xl"></div>
           
-          {/* Mobile-Only Quick Info Summary */}
-          <div className="lg:hidden bg-[#0A8F3C]/5 rounded-2xl p-6 border border-[#0A8F3C]/10 mb-2">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-gray-500 text-xs font-bold uppercase tracking-widest mb-1">Total Due</p>
-                <h2 className="text-3xl font-black text-slate-800 tracking-tight">₦2,000</h2>
-              </div>
-              <div className="text-right">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0A8F3C] text-white text-[10px] font-black uppercase tracking-widest shadow-md shadow-[#0A8F3C]/20">
-                  <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse"></span> Secure
-                </span>
-                <p className="text-[10px] text-gray-400 mt-2 font-bold uppercase tracking-widest">Faculty Dues</p>
-              </div>
+          <div className="relative z-10 flex flex-col items-center text-center">
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-md">
+              <FaIdCard className="text-3xl" />
             </div>
+            <h2 className="text-3xl font-black uppercase tracking-tight">Student Clearance</h2>
+            <p className="mt-2 text-green-100 font-medium opacity-90 max-w-md">
+              Securely finalize your annual faculty dues to maintain active membership and access resources.
+            </p>
           </div>
-          
-          {/* Left Column - Form */}
-          <div className="flex-1">
-            <Link to="/" id="back-to-home-link" className="text-gray-500 hover:text-primary font-semibold text-sm mb-6 inline-flex items-center transition-colors">
-               <span className="mr-2">&larr;</span> Back to Home
-            </Link>
-            
-            <div className="flex items-center gap-3 mb-6 sm:mb-10 mt-4">
-              <img src="/UNIPORT-LOGO-PNG.png" alt="UniPort Logo" className="h-8 sm:h-10 w-auto" style={{ height: '32px', width: 'auto' }} />
-              <img src="/NACOSLOGO.jpeg" alt="NACOS Logo" className="h-8 sm:h-10 w-auto rounded-full" style={{ height: '32px', width: '32px' }} />
-              <div className="pl-3 border-l-2 border-[#0A8F3C]/20 ml-1">
-                <h3 className="text-[9px] sm:text-xs font-black text-slate-800 uppercase tracking-widest leading-tight">Faculty of Computing<br/>UniPort</h3>
-              </div>
-            </div>
-
-            <h2 className="text-gray-500 font-bold text-sm uppercase mb-4 tracking-wider">Student Information</h2>
-
-            {errorMsg && (
-              <div role="alert" className="bg-red-50 text-red-600 p-4 rounded-xl font-medium border border-red-100 flex items-center mb-6 text-sm">
-                <span className="mr-3 text-lg" aria-hidden="true">⚠️</span>
-                {errorMsg}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" aria-label="Student Payment Form">
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                  <label htmlFor="regNo" className="sr-only">Matriculation or Registration Number</label>
-                  <input 
-                    id="regNo"
-                    {...register('regNo', { required: 'Matric/Reg number is required' })} 
-                    className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/40 focus:border-primary outline-none transition-all placeholder-gray-400 font-medium text-sm"
-                    placeholder="Mat No./Reg. No (e.g U2023/557000)"
-                  />
-                  {errors.regNo && <p className="text-red-500 text-xs font-bold mt-1.5" role="alert">{errors.regNo.message}</p>}
-                </div>
-                <div>
-                  <label htmlFor="email" className="sr-only">Email Address</label>
-                  <input 
-                    id="email"
-                    type="email"
-                    {...register('email', { required: 'Email is required' })} 
-                    className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/40 focus:border-primary outline-none transition-all placeholder-gray-400 font-medium text-sm"
-                    placeholder="Enter your email"
-                  />
-                  {errors.email && <p className="text-red-500 text-xs font-bold mt-1.5" role="alert">{errors.email.message}</p>}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <div>
-                  <label htmlFor="firstName" className="sr-only">First Name</label>
-                  <input 
-                    id="firstName"
-                    {...register('firstName', { required: 'Required' })} 
-                    className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/40 focus:border-primary outline-none transition-all placeholder-gray-400 font-medium text-sm"
-                    placeholder="First Name"
-                  />
-                  {errors.firstName && <p className="text-red-500 text-xs font-bold mt-1.5" role="alert">{errors.firstName.message}</p>}
-                </div>
-                <div>
-                  <label htmlFor="surname" className="sr-only">Surname</label>
-                  <input 
-                    id="surname"
-                    {...register('surname', { required: 'Required' })} 
-                    className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/40 focus:border-primary outline-none transition-all placeholder-gray-400 font-medium text-sm"
-                    placeholder="Surname"
-                  />
-                  {errors.surname && <p className="text-red-500 text-xs font-bold mt-1.5" role="alert">{errors.surname.message}</p>}
-                </div>
-                <div>
-                  <label htmlFor="middleName" className="sr-only">Middle Name</label>
-                  <input 
-                    id="middleName"
-                    {...register('middleName')} 
-                    className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/40 focus:border-primary outline-none transition-all placeholder-gray-400 font-medium text-sm"
-                    placeholder="Middle (Optional)"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                  <label htmlFor="studentLevel" className="sr-only">Student Level</label>
-                  <select 
-                    id="studentLevel"
-                    {...register('level', { required: 'Level is required' })}
-                    className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/40 focus:border-primary outline-none transition-all font-medium text-sm text-gray-600 bg-white"
-                  >
-                    <option value="">Select Level</option>
-                    <option value="100">100 Level</option>
-                    <option value="200">200 Level</option>
-                    <option value="300">300 Level</option>
-                    <option value="400">400 Level</option>
-                    <option value="500">500 Level</option>
-                  </select>
-                  {errors.level && <p className="text-red-500 text-xs font-bold mt-1.5" role="alert">{errors.level.message}</p>}
-                </div>
-                <div>
-                  <label htmlFor="studentDepartment" className="sr-only">Student Department</label>
-                  <select 
-                    id="studentDepartment"
-                    {...register('department', { required: 'Department is required' })}
-                    className="w-full p-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/40 focus:border-primary outline-none transition-all font-medium text-sm text-gray-600 bg-white"
-                  >
-                    <option value="">Select Department</option>
-                    <option value="Computer Science">Computer Science</option>
-                    <option value="Information Technology">Information Technology</option>
-                    <option value="Cyber Security">Cyber Security</option>
-                  </select>
-                  {errors.department && <p className="text-red-500 text-xs font-bold mt-1.5" role="alert">{errors.department.message}</p>}
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="passportPhoto" className="text-gray-500 font-bold text-xs uppercase mb-2 block tracking-wider">Upload Passport Photograph</label>
-                <input 
-                  id="passportPhoto"
-                  type="file"
-                  accept="image/*"
-                  {...register('passport', { required: 'Passport photo is required' })} 
-                  className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/40 focus:border-primary outline-none transition-all font-medium text-sm bg-gray-50 text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
-                />
-                {errors.passport && <p className="text-red-500 text-xs font-bold mt-1.5" role="alert">{errors.passport.message}</p>}
-              </div>
-
-              <div className="pt-6">
-                <button 
-                  id="submitPaymentBtn"
-                  type="submit" 
-                  disabled={loading}
-                  className={`w-full py-4 rounded-full text-white font-bold text-sm tracking-widest uppercase shadow-lg shadow-primary/30 transition-all duration-300 transform ${loading ? 'bg-primary/70 cursor-not-allowed' : 'bg-[#0A8F3C] hover:bg-green-700 hover:-translate-y-1'}`}
-                >
-                  {loading ? 'Initializing...' : 'Make Payment >'}
-                </button>
-              </div>
-
-            </form>
-          </div>
-
-          {/* Right Column - Info (Hidden on Desktop/Tablet, but we use lg:flex for layout) */}
-          <aside className="w-full lg:w-[400px] bg-[#F9FBFA] rounded-2xl p-6 sm:p-8 flex flex-col pt-8 sm:pt-12" aria-labelledby="instructions-heading">
-            
-            <div className="hidden lg:block text-center mb-10">
-              <p className="text-gray-500 font-semibold mb-1">Total amount</p>
-              <h2 className="text-4xl md:text-5xl font-black text-slate-800 tracking-tight">₦2,000</h2>
-              <p className="text-[#0A8F3C] font-semibold text-sm mt-2 flex items-center justify-center gap-1">
-                <span className="h-2 w-2 rounded-full bg-[#0A8F3C] inline-block" aria-hidden="true"></span> Secure payment
-              </p>
-            </div>
-
-            <div className="mt-8">
-              <h3 id="instructions-heading" className="text-[#DA4436] font-extrabold mb-6 tracking-wider uppercase text-sm">Instructions</h3>
-              
-              <div className="mb-6">
-                <h4 className="font-bold text-[#0A8F3C] text-sm mb-2">Step 1 - Carefully Fill the Form</h4>
-                <p className="text-sm text-gray-600 font-medium leading-relaxed">
-                  Ensure that you provide accurate and complete information while filling out the payment form. Double-check all entries before submitting.
-                </p>
-              </div>
-
-              <div>
-                <h4 className="font-bold text-[#0A8F3C] text-sm mb-2">Step 2 - Print and Label Your Receipt</h4>
-                <p className="text-sm text-gray-600 font-medium leading-relaxed mb-3">
-                  After completing your payment, print the Paystack receipt. On the printed receipt, attach your passport photograph and clearly write the following in <strong>BLOCK LETTERS (ALL CAPS)</strong>:
-                </p>
-                <ul className="text-sm text-gray-600 font-medium leading-relaxed list-disc pl-5 space-y-1">
-                  <li>Your Full Name</li>
-                  <li>Matriculation Number</li>
-                  <li>Department</li>
-                </ul>
-              </div>
-            </div>
-
-          </aside>
-
         </div>
-      </section>
-    </main>
+        
+        <form onSubmit={handleSubmit(onSubmit)} className="p-8 md:p-12 space-y-10">
+          {errorMsg && (
+            <div className="bg-red-50 text-red-700 p-5 rounded-2xl font-bold border-2 border-red-100 flex items-start animate-shake">
+              <FaExclamationTriangle className="text-xl mr-4 flex-shrink-0 mt-0.5" />
+              <p className="text-sm">{errorMsg}</p>
+            </div>
+          )}
+
+          {/* Section 1: Identity */}
+          <div className="space-y-6">
+            <div className="flex items-center space-x-3 mb-2">
+              <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-primary font-black text-sm">1</div>
+              <h3 className="text-lg font-black text-gray-900 uppercase tracking-widest text-xs">Identity Verification</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="group">
+                <label className="block text-gray-500 font-bold mb-2 text-[10px] uppercase tracking-[0.2em] transition-colors group-focus-within:text-primary">Matric / Registration Number</label>
+                <div className="relative">
+                  <input 
+                    {...register('regNo', { 
+                        required: 'Matric number is essential for clearance',
+                        pattern: { value: /^[a-zA-Z0-9/]+$/, message: 'Invalid format' }
+                    })} 
+                    className="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-bold text-gray-800 placeholder-gray-300"
+                    placeholder="CSC/20XX/XXX"
+                  />
+                </div>
+                {errors.regNo && <p className="text-red-500 text-xs font-bold mt-2 ml-2 italic">{errors.regNo.message}</p>}
+              </div>
+
+              <div>
+                <label className="block text-gray-500 font-bold mb-2 text-[10px] uppercase tracking-[0.2em]">Official University Email</label>
+                <input 
+                  type="email"
+                  {...register('email', { required: 'Please provide a valid email' })} 
+                  className="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-bold text-gray-800"
+                  placeholder="name@student.domain.edu"
+                />
+                {errors.email && <p className="text-red-500 text-xs font-bold mt-2 ml-2 italic">{errors.email.message}</p>}
+              </div>
+            </div>
+          </div>
+
+          {/* Section 2: Personal Profile */}
+          <div className="space-y-6">
+            <div className="flex items-center space-x-3 mb-2">
+              <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-primary font-black text-sm">2</div>
+              <h3 className="text-lg font-black text-gray-900 uppercase tracking-widest text-xs">Student Profile</h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-gray-500 font-bold mb-2 text-[10px] uppercase tracking-[0.2em]">Forename(s)</label>
+                <input 
+                  {...register('firstName', { required: 'Forename is required' })} 
+                  className="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-bold text-gray-800"
+                  placeholder="First name(s)"
+                />
+                {errors.firstName && <p className="text-red-500 text-xs font-bold mt-2 ml-2 italic">{errors.firstName.message}</p>}
+              </div>
+
+              <div>
+                <label className="block text-gray-500 font-bold mb-2 text-[10px] uppercase tracking-[0.2em]">Legal Surname</label>
+                <input 
+                  {...register('surname', { required: 'Surname is required' })} 
+                  className="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-bold text-gray-800"
+                  placeholder="Family name"
+                />
+                {errors.surname && <p className="text-red-500 text-xs font-bold mt-2 ml-2 italic">{errors.surname.message}</p>}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-gray-500 font-bold mb-2 text-[10px] uppercase tracking-[0.2em]">Middle Name <span className="text-gray-300 font-medium">(Optional)</span></label>
+                <input 
+                  {...register('middleName')} 
+                  className="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-bold text-gray-800"
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-500 font-bold mb-2 text-[10px] uppercase tracking-[0.2em]">Departmental Choice</label>
+                <select 
+                  {...register('department', { required: 'Selecting a department is required' })}
+                  className="w-full p-4 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition-all font-bold text-gray-800 appearance-none bg-no-repeat bg-[right_1rem_center]"
+                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='激19l-7 7-7-7'/%3E%3C/svg%3E")`, backgroundSize: '1.25rem' }}
+                >
+                  <option value="">Choose department...</option>
+                  <option value="Information Technology">Information Technology</option>
+                  <option value="Cyber Security">Cyber Security</option>
+                  <option value="Computer Science">Computer Science</option>
+                </select>
+                {errors.department && <p className="text-red-500 text-xs font-bold mt-2 ml-2 italic">{errors.department.message}</p>}
+              </div>
+            </div>
+          </div>
+
+          {/* Section 3: Professional Assets */}
+          <div className="space-y-6">
+            <div className="flex items-center space-x-3 mb-2">
+              <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-primary font-black text-sm">3</div>
+              <h3 className="text-lg font-black text-gray-900 uppercase tracking-widest text-xs">Official Identification</h3>
+            </div>
+
+            <div className="bg-secondary/20 p-6 rounded-[2rem] border-2 border-primary/10 group overflow-hidden relative">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-focus-within:scale-150 transition-transform duration-500">
+                <FaUserCircle className="text-6xl text-primary" />
+              </div>
+              <label className="block text-gray-700 font-black mb-3 text-sm tracking-tight">Digital Passport URL</label>
+              <input 
+                {...register('passportUrl', { required: 'Please provide a clear identification image URL' })} 
+                className="w-full p-4 bg-white border-2 border-transparent rounded-2xl focus:border-primary outline-none transition-all font-medium text-gray-600 shadow-sm"
+                placeholder="https://imgur.com/your-image.jpg"
+              />
+              <p className="mt-3 text-[10px] text-gray-500 font-bold uppercase tracking-tight flex items-center">
+                <FaLock className="mr-2 text-primary opacity-50" /> Securely stored for official student records.
+              </p>
+              {errors.passportUrl && <p className="text-red-500 text-xs font-bold mt-2 italic">{errors.passportUrl.message}</p>}
+            </div>
+          </div>
+
+          <div className="bg-gray-900 p-8 rounded-[2.5rem] mt-12 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-full bg-primary/10"></div>
+            <div className="relative z-10 text-center md:text-left">
+                <h4 className="text-gray-400 font-black uppercase tracking-[0.3em] text-[10px] mb-1">Clearance Fee</h4>
+                <div className="flex items-baseline">
+                  <span className="text-sm font-black text-primary mr-1 italic">NGN</span>
+                  <span className="text-5xl font-black text-white tracking-tighter italic">2,000<span className="text-lg text-primary">.00</span></span>
+                </div>
+            </div>
+            
+            <button 
+                type="submit" 
+                disabled={loading}
+                className={`relative z-10 py-5 px-10 rounded-2xl text-white font-black text-lg tracking-tight uppercase transition-all flex items-center justify-center shadow-lg shadow-primary/30 min-w-[200px] ${loading ? 'bg-primary/50 cursor-not-allowed' : 'bg-primary hover:bg-green-700 hover:-translate-y-1 active:translate-y-0 group'}`}
+            >
+                {loading ? (
+                    <div className="flex items-center space-x-3">
+                        <div className="w-5 h-5 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span>Processing...</span>
+                    </div>
+                ) : (
+                    <div className="flex items-center space-x-2">
+                        <span>Initialize Payment</span>
+                        <FaCheckCircle className="ml-2 group-hover:scale-125 transition-transform" />
+                    </div>
+                )}
+            </button>
+          </div>
+
+          <div className="text-center pt-4">
+            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                Protected by Paystack high-grade bank security.
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

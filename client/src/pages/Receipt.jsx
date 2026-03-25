@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import html2pdf from 'html2pdf.js';
-import { FaCheckCircle, FaDownload, FaArrowLeft } from 'react-icons/fa';
+import { FaDownload, FaCheckCircle, FaPrint, FaArrowLeft, FaUniversity, FaUserGraduate } from 'react-icons/fa';
 
 const Receipt = () => {
   const { id } = useParams();
@@ -19,17 +19,13 @@ const Receipt = () => {
         if (reference) {
           const res = await axios.get(`http://localhost:5000/api/payments/verify?reference=${reference}`);
           setPayment(res.data.payment);
-          // Clean up URL so refresh doesn't trigger verification again
           window.history.replaceState(null, '', `/receipt/${res.data.payment._id}`);
         } else if (id) {
           const res = await axios.get(`http://localhost:5000/api/payments/receipt/${id}`);
           setPayment(res.data);
-        } else {
-          setErrorMsg("Invalid receipt parameters.");
         }
       } catch (err) {
-        console.error(err);
-        setErrorMsg('Failed to fetch payment details. It might not be verified yet.');
+        setErrorMsg('Verification unsuccessful. Please try again or contact support.');
       } finally {
         setLoading(false);
       }
@@ -38,120 +34,167 @@ const Receipt = () => {
   }, [id, reference]);
 
   const downloadPDF = () => {
-    const element = document.getElementById('receipt-card');
+    const element = document.getElementById('receipt-download-area');
     const opt = {
-      margin: 0,
-      filename: `Faculty_Receipt_${payment.regNo.replace(/\//g, '_')}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      margin: 0.2,
+      filename: `Receipt_${payment.regNo.replace(/\//g, '_')}.pdf`,
+      image: { type: 'jpeg', quality: 1 },
+      html2canvas: { scale: 3, useCORS: true, letterRendering: true },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
     };
-    html2pdf().set(opt).from(element).save();
+    const button = document.getElementById('download-btn');
+    button.style.display = 'none';
+    html2pdf().set(opt).from(element).save().then(() => {
+      button.style.display = 'flex';
+    });
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-secondary">
-        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-4 text-primary font-bold text-xl tracking-wider animate-pulse">Processing Payment...</p>
+  if (loading) return (
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6">
+      <div className="w-20 h-20 relative">
+        <div className="absolute inset-0 border-8 border-secondary rounded-full"></div>
+        <div className="absolute inset-0 border-8 border-primary rounded-full border-t-transparent animate-spin"></div>
       </div>
-    );
-  }
+      <h2 className="mt-8 text-2xl font-black text-gray-900 animate-pulse">Confirming Transaction...</h2>
+    </div>
+  );
 
-  if (!payment) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
-        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center border-t-4 border-red-500">
-          <div className="w-20 h-20 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl">❌</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Verification Failed</h2>
-          <p className="text-gray-600 mb-6">{errorMsg}</p>
-          <Link to="/" className="inline-flex items-center text-primary font-bold hover:underline">
-            <FaArrowLeft className="mr-2" /> Return Home
-          </Link>
-        </div>
+  if (!payment) return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+      <div className="max-w-md w-full bg-white p-12 rounded-[2.5rem] shadow-2xl text-center border-b-8 border-red-500">
+        <div className="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">⚠️</div>
+        <h2 className="text-2xl font-black text-gray-900 mb-2 italic uppercase tracking-tighter">Session Expired</h2>
+        <p className="text-gray-500 mb-8 font-medium">{errorMsg || 'We could not authenticate this transaction.'}</p>
+        <Link to="/" className="inline-block py-4 px-8 bg-gray-900 text-white font-black rounded-2xl hover:bg-black transition-all shadow-lg active:translate-y-1">BACK TO HOME</Link>
       </div>
-    );
-  }
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 sm:py-12 px-4 flex flex-col items-center">
-      <Link to="/" className="fixed top-4 left-4 sm:top-6 sm:left-6 z-50 flex items-center justify-center w-10 h-10 sm:w-auto sm:h-auto bg-white/80 backdrop-blur-md sm:bg-transparent rounded-full border border-gray-100 sm:border-0 shadow-sm sm:shadow-none text-gray-500 hover:text-[#0A8F3C] transition-all group">
-        <FaArrowLeft className="sm:mr-2 group-hover:-translate-x-1 transition-transform" /> 
-        <span className="hidden sm:inline font-semibold">Back Home</span>
-      </Link>
-      
-      <div id="receipt-card" className="bg-white max-w-lg w-full rounded-3xl shadow-2xl overflow-hidden mb-8 transform transition-all border border-gray-100">
-        <div className="bg-[#0A8F3C] p-8 sm:p-10 text-center text-white relative">
-          <div className="relative z-10">
-            <FaCheckCircle className="text-5xl sm:text-6xl mx-auto mb-4 text-white/90 drop-shadow-lg" />
-            <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-widest leading-tight">Payment<br/>Successful</h2>
-            <p className="opacity-80 mt-2 text-xs sm:text-sm font-bold uppercase tracking-[0.2em]">Official Faculty Receipt</p>
-          </div>
-          <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div className="absolute -top-10 -left-10 w-40 h-40 bg-white opacity-5 rounded-full"></div>
-            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-black opacity-5 rounded-full"></div>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-12 px-4 shadow-inner relative overflow-hidden">
+      {/* Dynamic Background */}
+      <div className="fixed inset-0 pointer-events-none opacity-5">
+        <div className="absolute top-1/4 left-1/4 text-9xl font-black text-primary rotate-12 select-none">PAID</div>
+        <div className="absolute bottom-1/4 right-1/4 text-9xl font-black text-primary -rotate-12 select-none uppercase">Verified</div>
+      </div>
+
+      <div className="max-w-2xl w-full z-10 mb-8 flex justify-between items-center sm:px-6">
+        <Link to="/" className="flex items-center text-sm font-black text-gray-500 hover:text-primary transition-colors tracking-widest uppercase">
+          <FaArrowLeft className="mr-2" /> Home
+        </Link>
+        <p className="text-[10px] font-black text-primary bg-secondary/50 px-3 py-1 rounded-full uppercase tracking-[0.2em]">Official E-Document</p>
+      </div>
+
+      <div id="receipt-download-area" className="w-full max-w-2xl bg-white shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] rounded-[3rem] overflow-hidden border border-gray-100 relative">
+        {/* Top Branding Bar */}
+        <div className="h-4 bg-primary"></div>
         
-        <div className="p-8 sm:p-10">
-          <div className="flex justify-between items-end border-b-2 border-gray-100 pb-6 mb-8">
-            <div>
-              <p className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-1">Date Paid</p>
-              <p className="text-gray-900 font-bold">{new Date(payment.createdAt).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+        <div className="p-8 sm:p-12">
+          {/* Header Branding */}
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-8 mb-12 border-b border-gray-100 pb-10">
+            <div className="flex items-center space-x-4 group">
+               <img src="/UNIPORT-LOGO-PNG.png" alt="Logo" className="h-16 w-auto grayscale transition group-hover:grayscale-0" />
+               <div className="text-center sm:text-left">
+                  <h4 className="font-black text-gray-900 leading-tight uppercase tracking-tighter italic">University of <br/> Port Harcourt</h4>
+                  <p className="text-[10px] text-primary font-black uppercase tracking-[0.3em] mt-1">Faculty of Computing</p>
+               </div>
             </div>
-            <div className="text-right">
-              <p className="text-xs text-gray-400 uppercase tracking-widest font-bold mb-1">Receipt ID</p>
-              <p className="text-gray-800 font-bold bg-gray-100 px-3 py-1 rounded-md text-sm font-mono">{payment.paymentReference.slice(0, 12)}</p>
+            <div className="text-center sm:text-right">
+                <div className="bg-primary text-white p-4 rounded-3xl inline-block mb-3 shadow-lg shadow-primary/20">
+                   <FaCheckCircle className="text-3xl" />
+                </div>
+                <h3 className="text-2xl font-black text-gray-900 tracking-tight leading-none uppercase italic">Official<br/>Receipt</h3>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 mb-10 text-center sm:text-left">
-            {payment.passportUrl ? (
-              <div className="relative group">
-                <div className="absolute -inset-1.5 bg-[#0A8F3C]/20 rounded-[2rem] blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+          {/* Student Info Group */}
+          <div className="flex flex-col md:flex-row gap-10 items-center md:items-start mb-12">
+            <div className="relative group">
+              <div className="absolute -inset-2 bg-secondary rounded-[2rem] scale-90 group-hover:scale-100 transition duration-500 opacity-50 blur-lg"></div>
+              {payment.passportUrl ? (
                 <img 
                   src={payment.passportUrl} 
-                  alt="Student Passport" 
+                  alt="Student Identification" 
                   crossOrigin="anonymous"
-                  className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-[2rem] object-cover border-4 border-white shadow-xl"
-                  style={{ width: '112px', height: '112px', objectFit: 'cover' }}
+                  className="w-40 h-40 rounded-[2rem] object-cover relative z-10 border-4 border-white shadow-xl"
                 />
+              ) : (
+                <div className="w-40 h-40 rounded-[2rem] bg-gray-100 flex items-center justify-center relative z-10 border-4 border-white shadow-xl italic font-black text-gray-200">NO PHOTO</div>
+              )}
+              <div className="absolute -bottom-3 -right-3 h-10 w-10 bg-primary text-white rounded-2xl flex items-center justify-center z-20 shadow-lg group-hover:rotate-12 transition-transform">
+                <FaUserGraduate />
               </div>
-            ) : (
-              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-[2rem] bg-gray-50 border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-400 font-bold uppercase text-[10px] tracking-widest">No Passport</div>
-            )}
-            <div className="flex-1 min-w-0">
-              <h3 className="text-2xl sm:text-3xl font-black text-slate-800 leading-tight truncate">{payment.firstName} {payment.surname}</h3>
-              <p className="text-lg sm:text-xl font-black text-[#0A8F3C] mt-1 tracking-tight">{payment.regNo}</p>
-              <p className="text-gray-400 font-bold uppercase text-[10px] sm:text-xs mt-2 tracking-widest">{payment.department}</p>
+            </div>
+
+            <div className="flex-1 space-y-4 text-center md:text-left">
+              <div>
+                <p className="text-[10px] text-gray-400 font-black uppercase tracking-[0.3em] mb-1">Student / Owner</p>
+                <h3 className="text-3xl font-black text-gray-900 leading-tight uppercase tracking-tighter italic lg:text-4xl">
+                  {payment.surname} <br className="hidden lg:block"/> {payment.firstName}
+                </h3>
+              </div>
+              <div className="flex flex-wrap justify-center md:justify-start gap-4">
+                 <div className="bg-gray-900 text-white px-5 py-2 rounded-2xl shadow-md">
+                   <p className="text-[9px] text-primary font-black uppercase tracking-widest opacity-80 leading-none mb-1">Matric No</p>
+                   <p className="font-black text-sm italic tracking-widest">{payment.regNo}</p>
+                 </div>
+                 <div className="bg-secondary/40 text-primary border-2 border-primary/10 p-2.5 px-5 rounded-2xl font-black text-xs uppercase tracking-widest self-center h-fit">
+                    {payment.department}
+                 </div>
+              </div>
             </div>
           </div>
 
-          <div className="bg-secondary/30 rounded-2xl p-6 border border-primary/10 mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <span className="text-gray-600 font-semibold">Payment Purpose</span>
-              <span className="text-gray-900 font-bold">Session Dues</span>
+          {/* Payment breakdown */}
+          <div className="bg-gray-50 rounded-[2rem] p-8 space-y-6 mb-12 border border-gray-100/50">
+            <div className="flex justify-between items-center group">
+               <span className="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Description</span>
+               <span className="text-gray-900 font-black text-sm uppercase italic">Annual Faculty Dues</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600 font-semibold">Status</span>
-              <span className="bg-primary text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest shadow-sm">Verified</span>
+               <span className="text-gray-400 font-bold uppercase tracking-[0.2em] text-[10px]">Reference</span>
+               <span className="text-gray-500 font-black text-xs font-mono uppercase tracking-widest select-all">{payment.paymentReference.slice(0, 16)}...</span>
+            </div>
+            <div className="flex justify-between items-center border-t-2 border-dashed border-gray-200 pt-6">
+               <span className="text-gray-900 font-black uppercase tracking-[0.2em] text-[10px] italic">Amount Paid</span>
+               <span className="text-4xl lg:text-5xl font-black text-gray-900 tracking-tighter italic">₦2,000<span className="text-lg opacity-30">.00</span></span>
             </div>
           </div>
 
-          <div className="flex justify-between items-center border-t border-gray-100 pt-6">
-            <span className="text-gray-400 font-bold uppercase tracking-widest text-sm">Amount Paid</span>
-            <span className="text-4xl font-black text-gray-900">₦2,000</span>
+          {/* Verification Bar */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-t border-gray-100 pt-10 px-2">
+            <div className="flex items-center space-x-3 opacity-30 grayscale hover:grayscale-0 hover:opacity-100 transition cursor-default">
+               <FaUniversity className="text-xl" />
+               <div className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">Digital Authentication System <br/> UNIPORT FACULTY OF COMPUTING</div>
+            </div>
+            <div className="text-center sm:text-right">
+               <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em]">Transaction Date</p>
+               <p className="text-gray-900 font-black italic">{new Date(payment.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+            </div>
           </div>
         </div>
       </div>
 
-      <button 
-        onClick={downloadPDF}
-        className="flex items-center space-x-3 bg-gray-900 hover:bg-black text-white py-4 px-10 rounded-full font-bold text-lg shadow-xl shadow-gray-900/20 transition-all hover:-translate-y-1 active:translate-y-0"
-      >
-        <FaDownload />
-        <span>Download Receipt</span>
-      </button>
+      <div className="flex flex-col sm:flex-row gap-4 mt-12 w-full max-w-2xl px-4">
+          <button 
+            id="download-btn"
+            onClick={downloadPDF}
+            className="flex-1 flex items-center justify-center space-x-3 bg-gray-900 hover:bg-black text-white py-6 rounded-3xl font-black text-lg shadow-2xl transition hover:-translate-y-2 active:translate-y-0 active:scale-95 group uppercase tracking-tight"
+          >
+            <FaDownload className="group-hover:bounce" />
+            <span>Download PDF</span>
+          </button>
+          
+          <button 
+            onClick={() => window.print()}
+            className="flex-1 flex items-center justify-center space-x-3 bg-white hover:bg-gray-50 text-gray-800 py-6 rounded-3xl font-black text-lg shadow-xl shadow-gray-200 transition hover:-translate-y-2 active:translate-y-0 active:scale-95 border-2 border-gray-100 uppercase tracking-tight"
+          >
+            <FaPrint />
+            <span>Print Receipt</span>
+          </button>
+      </div>
+      
+      <p className="mt-12 text-[10px] text-gray-400 font-black uppercase tracking-[0.4em] mb-4">Verification Secured by NACOS</p>
     </div>
   );
 };
