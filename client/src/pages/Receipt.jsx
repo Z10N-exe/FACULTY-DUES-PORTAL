@@ -75,7 +75,7 @@ const Receipt = () => {
 
         {/* Document Title */}
         <div className="text-center mb-12">
-           <h2 className="text-2xl font-black uppercase tracking-[0.2em] italic underline underline-offset-8">Payment Clearance Certificate</h2>
+           <h2 className="text-2xl font-black uppercase tracking-[0.2em] italic underline underline-offset-8">Dues Payment Receipt</h2>
            <p className="mt-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest leading-loose">
              Verified Digital Authentication &bull; NACOS UNIPORT Chapter
            </p>
@@ -123,7 +123,7 @@ const Receipt = () => {
             <div className="text-right flex items-center space-x-4">
                <div>
                   <p className="text-[10px] font-black uppercase italic">Official Association Seal</p>
-                  <p className="text-[8px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">Clearing Protocol Secured</p>
+                  <p className="text-[8px] text-gray-400 font-bold uppercase tracking-widest mt-0.5">Dues Payment Protocol</p>
                </div>
                <img src="/NACOSLOGO.jpeg" className="h-12 w-auto" alt="Logo" />
             </div>

@@ -31,9 +31,9 @@ const Home = () => {
             <div className="pt-2 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
               <Link 
                 to="/pay" 
-                className="px-8 py-3 bg-primary text-white font-bold rounded-md shadow-md hover:bg-green-700 transition-colors text-center"
+                className="px-8 py-3 bg-primary text-white font-bold rounded-md shadow-md hover:bg-green-700 transition-colors text-center uppercase tracking-widest text-xs"
               >
-                PAY DUES
+                Get Started
               </Link>
               <button className="px-8 py-3 bg-white border border-gray-200 text-gray-700 font-bold rounded-md hover:bg-gray-50 transition-colors">
                 LEARN MORE
@@ -50,7 +50,7 @@ const Home = () => {
             <div className="w-14 h-14 bg-green-50 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
               <FaCreditCard className="text-2xl" />
             </div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2 uppercase tracking-tight">Pay Annual Dues</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-2 uppercase tracking-tight">Dues Portal</h3>
             <p className="text-gray-500 text-sm leading-relaxed">
               Fast and secure payment system. Generate your official receipt instantly after transaction.
             </p>

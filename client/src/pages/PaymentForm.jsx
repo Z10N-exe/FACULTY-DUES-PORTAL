@@ -49,7 +49,7 @@ const PaymentForm = () => {
         <div className="bg-gray-50 border-b border-gray-100 px-8 py-8 text-center">
             <FaIdCard className="text-3xl text-primary mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-gray-900 uppercase tracking-tight">Student Dues Portal</h2>
-            <p className="mt-2 text-sm text-gray-500">Official NACOS clearance system.</p>
+            <p className="mt-2 text-sm text-gray-500">Official NACOS dues portal.</p>
         </div>
         
         <form onSubmit={handleSubmit(onSubmit)} className="p-8 md:p-12 space-y-8">
@@ -106,15 +106,15 @@ const PaymentForm = () => {
 
           <div className="pt-8 border-t border-gray-100 flex items-center justify-between">
             <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Amount</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Dues Contribution</p>
               <p className="text-3xl font-bold text-gray-900">₦2,000</p>
             </div>
             <button 
               type="submit" 
               disabled={loading}
-              className={`px-10 py-4 bg-primary text-white font-bold rounded shadow-md hover:bg-green-700 transition-colors ${loading ? 'opacity-50' : ''}`}
+              className={`px-10 py-4 bg-primary text-white font-bold rounded shadow-md hover:bg-green-700 transition-colors ${loading ? 'opacity-50' : ''} uppercase tracking-widest text-xs`}
             >
-              {loading ? 'Processing...' : 'INITIALIZE'}
+              {loading ? 'Please wait...' : 'Confirm & Proceed'}
             </button>
           </div>
         </form>

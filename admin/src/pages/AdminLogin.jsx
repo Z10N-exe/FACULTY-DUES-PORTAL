@@ -74,7 +74,7 @@ const AdminLogin = () => {
             disabled={loading}
             className={`w-full py-4 bg-gray-900 text-white font-bold rounded hover:bg-black transition-all flex items-center justify-center uppercase tracking-widest text-xs ${loading ? 'opacity-50' : ''}`}
           >
-            {loading ? 'Authorizing...' : 'LOGIN TO DASHBOARD'}
+            {loading ? 'Please wait...' : 'ACCESS PORTAL'}
           </button>
         </form>
         

@@ -100,8 +100,8 @@ const AdminDashboard = () => {
         {/* Simplified Stats */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12 border-b border-gray-200 pb-10">
            <div className="space-y-1">
-              <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase italic">Revenue Summary</h2>
-              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Digital Clearance Monitoring</p>
+              <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase italic">Contribution Overview</h2>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Digital Dues Monitoring</p>
            </div>
            
            <div className="flex gap-4 w-full md:w-auto">
@@ -181,7 +181,7 @@ const AdminDashboard = () => {
                          <td className="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">{new Date(p.createdAt).toLocaleDateString()}</td>
                          <td className="px-6 py-4 text-right">
                             <span className="text-[9px] font-bold text-green-600 uppercase border border-green-100 bg-green-50 px-3 py-1 rounded-full">
-                               Verified
+                               Dues Verified
                             </span>
                          </td>
                       </tr>
