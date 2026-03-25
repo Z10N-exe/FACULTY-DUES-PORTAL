@@ -16,9 +16,8 @@ const initializePayment = async (req, res) => {
       return res.status(400).json({ message: 'Passport photo file is required.' });
     }
 
-    // Convert image buffer to Base64 String to store in MongoDB directly
-    const base64Image = req.file.buffer.toString('base64');
-    const passportUrl = `data:${req.file.mimetype};base64,${base64Image}`;
+    // Use filename from multer diskStorage and construct a local URL
+    const passportUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
 
     // Create a pending payment record
     const newPayment = await Payment.create({
