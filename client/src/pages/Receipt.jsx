@@ -12,7 +12,7 @@ const Receipt = () => {
   useEffect(() => {
     const fetchPayment = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/payments/receipt/${id}`);
+        const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/payments/receipt/${id}`);
         setPayment(res.data);
       } catch (err) {
         console.error(err);
@@ -85,7 +85,7 @@ const Receipt = () => {
         <div className="grid grid-cols-2 gap-y-8 border-y border-gray-100 py-10 mb-12">
             <div>
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.3em] mb-1">Student Full Name</p>
-                <p className="text-lg font-black uppercase tracking-tighter italic">{payment.surname} {payment.firstName} {payment.middleName}</p>
+                <p className="text-lg font-black uppercase tracking-tighter italic">{payment.surname} {payment.firstName}{payment.middleName ? ` ${payment.middleName}` : ''}</p>
             </div>
             <div>
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.3em] mb-1">Registration No</p>
@@ -96,8 +96,12 @@ const Receipt = () => {
                 <p className="text-base font-bold uppercase tracking-widest text-primary">{payment.department}</p>
             </div>
             <div>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.3em] mb-1">Level</p>
+                <p className="text-base font-bold uppercase tracking-widest">{payment.level}</p>
+            </div>
+            <div>
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.3em] mb-1">Academic Session</p>
-                <p className="text-base font-bold uppercase tracking-widest">2023 / 2024</p>
+                <p className="text-base font-bold uppercase tracking-widest">{payment.session}</p>
             </div>
         </div>
 

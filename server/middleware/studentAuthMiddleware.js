@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const protect = (req, res, next) => {
+const protectStudent = (req, res, next) => {
   let token;
 
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -8,11 +8,12 @@ const protect = (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      if (decoded.role === 'admin') {
-        return next();
-      } else {
-        return res.status(401).json({ message: 'Not authorized, admin only' });
+      if (decoded.role !== 'student') {
+        return res.status(401).json({ message: 'Not authorized, student only' });
       }
+
+      req.student = { id: decoded.id };
+      return next();
     } catch (error) {
       return res.status(401).json({ message: 'Not authorized, token failed' });
     }
@@ -23,4 +24,4 @@ const protect = (req, res, next) => {
   }
 };
 
-module.exports = { protect };
+module.exports = { protectStudent };

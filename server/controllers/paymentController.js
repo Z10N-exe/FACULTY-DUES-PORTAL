@@ -3,7 +3,7 @@ const axios = require('axios');
 
 const initializePayment = async (req, res) => {
   try {
-    const { regNo, email, firstName, surname, middleName, level, department } = req.body;
+    const { regNo, email, firstName, surname, middleName, level, session, department } = req.body;
     let amount = 2000;
 
     // Check if a payment for this reg no already exists
@@ -21,7 +21,7 @@ const initializePayment = async (req, res) => {
 
     // Create a pending payment record
     const newPayment = await Payment.create({
-      regNo, email, firstName, surname, middleName, level, department, passportUrl, amount
+      regNo, email, firstName, surname, middleName, level, session, department, passportUrl, amount
     });
 
     // Initialize Paystack Checkout

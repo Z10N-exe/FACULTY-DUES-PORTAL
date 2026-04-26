@@ -4,6 +4,10 @@ import Header from './components/Header';
 import Home from './pages/Home';
 import PaymentForm from './pages/PaymentForm';
 import Receipt from './pages/Receipt';
+import Verify from './pages/Verify';
+import StudentLogin from './pages/StudentLogin';
+import StudentRegister from './pages/StudentRegister';
+import StudentDashboard from './pages/StudentDashboard';
 
 function App() {
   return (
@@ -14,7 +18,11 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/pay" element={<PaymentForm />} />
+            <Route path="/verify" element={<Verify />} />
             <Route path="/receipt/:id" element={<Receipt />} />
+            <Route path="/login" element={<StudentLogin />} />
+            <Route path="/register" element={<StudentRegister />} />
+            <Route path="/dashboard" element={<StudentDashboard />} />
           </Routes>
         </main>
       </div>

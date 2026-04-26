@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaShieldAlt, FaLock } from 'react-icons/fa';
+import { FaShieldAlt } from 'react-icons/fa';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -15,7 +15,7 @@ const AdminLogin = () => {
     setLoading(true);
     setError('');
     try {
-      const res = await axios.post('http://localhost:5000/api/admin/login', { email, password });
+      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/admin/login`, { email, password });
       localStorage.setItem('adminToken', res.data.token);
       navigate('/');
     } catch (err) {
