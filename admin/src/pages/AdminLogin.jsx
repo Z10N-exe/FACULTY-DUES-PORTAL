@@ -15,7 +15,7 @@ const AdminLogin = () => {
     setLoading(true);
     setError('');
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/admin/login`, { email, password });
+      const res = await axios.post(`https://faculty-dues-api-72mv.onrender.com/api/admin/login`, { email, password });
       localStorage.setItem('adminToken', res.data.token);
       navigate('/');
     } catch (err) {

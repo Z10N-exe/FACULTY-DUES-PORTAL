@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaIdCard, FaCheckCircle, FaCloudUploadAlt } from 'react-icons/fa';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API = 'https://faculty-dues-api-72mv.onrender.com/api';
 
 const DEPARTMENTS = ['Computer Science', 'Information Technology', 'Cyber Security'];
 const LEVELS = ['100L', '200L', '300L', '400L', '500L'];
@@ -85,7 +85,7 @@ const PaymentForm = () => {
         <div className="bg-gray-50 border-b border-gray-100 px-8 py-8 text-center">
           <FaIdCard className="text-3xl text-green-600 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900">
-            Member <span className="text-green-600 italic">Contribution</span>
+            Student <span className="text-green-600 italic">Levy</span>
           </h2>
           <p className="mt-2 text-sm text-gray-500">NACOS UNIPORT — Faculty of Computing</p>
         </div>
@@ -164,7 +164,7 @@ const PaymentForm = () => {
 
           <div className="pt-8 border-t border-gray-100 flex items-center justify-between">
             <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Annual contribution</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Annual levy</p>
               <p className="text-3xl font-bold text-gray-900">₦2,000</p>
             </div>
             <button

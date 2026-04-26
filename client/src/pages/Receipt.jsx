@@ -12,7 +12,7 @@ const Receipt = () => {
   useEffect(() => {
     const fetchPayment = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/payments/receipt/${id}`);
+        const res = await axios.get(`https://faculty-dues-api-72mv.onrender.com/api/payments/receipt/${id}`);
         setPayment(res.data);
       } catch (err) {
         console.error(err);

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaSignOutAlt, FaSearch, FaFileCsv, FaUniversity, FaBullhorn, FaTrash } from 'react-icons/fa';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API = 'https://faculty-dues-api-72mv.onrender.com/api';
 
 const AdminDashboard = () => {
   const [tab, setTab] = useState('payments');

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { FaCreditCard, FaBook, FaBullhorn } from 'react-icons/fa';
+import { FaBook, FaBullhorn } from 'react-icons/fa';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API = 'https://faculty-dues-api-72mv.onrender.com/api';
 
 const Home = () => {
   const [announcements, setAnnouncements] = useState([]);
@@ -52,16 +52,7 @@ const Home = () => {
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-12">
             What we <span className="text-green-600 italic">offer</span>
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
-            <div>
-              <div className="w-12 h-12 bg-green-50 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FaCreditCard className="text-xl" />
-              </div>
-              <h3 className="text-base font-bold text-gray-900 mb-1">Member Contributions</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">
-                Secure online contributions with instant receipt generation.
-              </p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 text-center max-w-2xl mx-auto">
             <div>
               <div className="w-12 h-12 bg-green-50 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <FaBook className="text-xl" />
