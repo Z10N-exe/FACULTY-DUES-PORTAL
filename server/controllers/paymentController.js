@@ -49,8 +49,8 @@ const initializePayment = async (req, res) => {
     if (error.code === 11000) {
       return res.status(400).json({ message: 'A payment request already exists for this reg number.' });
     }
-    console.error(error);
-    res.status(500).json({ message: 'Payment initialization failed.' });
+    console.error('Payment initialization error:', error.message, error.response?.data);
+    res.status(500).json({ message: 'Payment initialization failed.', error: error.message });
   }
 };
 
