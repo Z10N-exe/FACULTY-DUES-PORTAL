@@ -11,11 +11,14 @@ const getAnnouncements = async (req, res) => {
 
 const createAnnouncement = async (req, res) => {
   try {
-    const { title, body } = req.body;
+    const { title, body, category } = req.body;
     if (!title || !body) {
       return res.status(400).json({ message: 'Title and body are required.' });
     }
-    const announcement = await Announcement.create({ title, body });
+    const coverImage = req.file
+      ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
+      : '';
+    const announcement = await Announcement.create({ title, body, category: category || 'General', coverImage });
     res.status(201).json(announcement);
   } catch (error) {
     res.status(500).json({ message: 'Failed to create announcement.' });
