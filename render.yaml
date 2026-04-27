@@ -11,13 +11,13 @@ services:
       - key: PORT
         value: 10000
       - key: MONGO_URI
-        sync: false  # Set manually in Render dashboard
+        sync: false
       - key: PAYSTACK_SECRET_KEY
-        sync: false  # Set manually in Render dashboard
+        sync: false
       - key: JWT_SECRET
-        sync: false  # Set manually in Render dashboard
+        value: supersecret123
       - key: CLIENT_URL
-        sync: false  # e.g. https://faculty-dues.onrender.com
+        value: https://faculty-dues-portal.onrender.com
 
   # ── Student Frontend (Free Static Site) ─────────────────────
   - type: web
