@@ -130,7 +130,7 @@ const AdminDashboard = () => {
       blogImages.forEach(img => formData.append('images', img));
 
       await axios.post(`${API}/blog`, formData, {
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
+        headers: { Authorization: `Bearer ${token}` }
       });
       setBlogTitle('');
       setBlogBody('');
