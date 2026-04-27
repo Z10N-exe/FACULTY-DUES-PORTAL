@@ -1,18 +1,8 @@
 const multer = require('multer');
-const path = require('path');
 
-// Configure storage
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'passport-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
+// Use memory storage — files stored as buffers, converted to Base64 for MongoDB
+const storage = multer.memoryStorage();
 
-// File filter (images only)
 const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image/')) {
     cb(null, true);
@@ -21,10 +11,15 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({ 
-  storage: storage,
-  fileFilter: fileFilter,
+const upload = multer({
+  storage,
+  fileFilter,
   limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
 });
 
-module.exports = upload;
+// Helper to convert buffer to Base64 data URL
+const toBase64 = (file) => {
+  return `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
+};
+
+module.exports = { upload, toBase64 };

@@ -1,12 +1,12 @@
 const Payment = require('../models/Payment');
 const axios = require('axios');
+const { toBase64 } = require('../middleware/uploadMiddleware');
 
 const initializePayment = async (req, res) => {
   try {
     const { regNo, email, firstName, surname, middleName, level, session, department } = req.body;
     let amount = 2000;
 
-    // Check if a payment for this reg no already exists
     const existingPayment = await Payment.findOne({ regNo, status: 'paid' });
     if (existingPayment) {
       return res.status(400).json({ message: 'A payment has already been made for this Registration Number.' });
@@ -16,8 +16,8 @@ const initializePayment = async (req, res) => {
       return res.status(400).json({ message: 'Passport photo file is required.' });
     }
 
-    // Use filename from multer diskStorage and construct a local URL
-    const passportUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+    // Store image as Base64 string in MongoDB
+    const passportUrl = toBase64(req.file);
 
     // Create a pending payment record
     const newPayment = await Payment.create({
