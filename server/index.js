@@ -21,12 +21,12 @@ app.use('/uploads', express.static('uploads'));
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
-// Routes
-app.use('/api/payments', require('./routes/paymentRoutes'));
-app.use('/api/admin', require('./routes/adminRoutes'));
-app.use('/api/announcements', require('./routes/announcementRoutes'));
-app.use('/api/students', require('./routes/studentRoutes'));
-app.use('/api/blog', require('./routes/blogRoutes'));
+// Routes - wrapped to catch any require errors
+try { app.use('/api/payments', require('./routes/paymentRoutes')); } catch(e) { console.error('paymentRoutes failed:', e.message); }
+try { app.use('/api/admin', require('./routes/adminRoutes')); } catch(e) { console.error('adminRoutes failed:', e.message); }
+try { app.use('/api/announcements', require('./routes/announcementRoutes')); } catch(e) { console.error('announcementRoutes failed:', e.message); }
+try { app.use('/api/students', require('./routes/studentRoutes')); } catch(e) { console.error('studentRoutes failed:', e.message); }
+try { app.use('/api/blog', require('./routes/blogRoutes')); } catch(e) { console.error('blogRoutes failed:', e.message); }
 
 // Connect to MongoDB
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://zion:123@skillvault.3azy1js.mongodb.net/skillvault?appName=SKILLVAULT';
