@@ -9,28 +9,28 @@ const StudentDashboard = () => {
   const [student, setStudent] = useState(null);
   const [payment, setPayment] = useState(null);
   const [announcements, setAnnouncements] = useState([]);
+  const [newAnnouncements, setNewAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('studentToken');
-    if (!token) {
-      navigate('/login', { replace: true });
-      return;
-    }
+    if (!token) { navigate('/login', { replace: true }); return; }
 
     const fetchData = async () => {
       try {
         const [meRes, annRes] = await Promise.all([
-          axios.get(`${API}/students/me`, {
-            headers: { Authorization: `Bearer ${token}` }
-          }),
+          axios.get(`${API}/students/me`, { headers: { Authorization: `Bearer ${token}` } }),
           axios.get(`${API}/announcements`)
         ]);
         setStudent(meRes.data.student);
         setPayment(meRes.data.payment);
-        setAnnouncements(annRes.data.slice(0, 3));
-      } catch (err) {
-        // Token invalid or expired — redirect to login
+        const all = annRes.data.slice(0, 3);
+        setAnnouncements(all);
+
+        // Check which announcements are new (not yet seen)
+        const seen = JSON.parse(localStorage.getItem('seenAnnouncements') || '[]');
+        setNewAnnouncements(all.filter(a => !seen.includes(a._id)));
+      } catch {
         localStorage.removeItem('studentToken');
         navigate('/login', { replace: true });
       } finally {
@@ -40,6 +40,19 @@ const StudentDashboard = () => {
 
     fetchData();
   }, [navigate]);
+
+  const dismissNotification = (id) => {
+    const seen = JSON.parse(localStorage.getItem('seenAnnouncements') || '[]');
+    localStorage.setItem('seenAnnouncements', JSON.stringify([...seen, id]));
+    setNewAnnouncements(prev => prev.filter(a => a._id !== id));
+  };
+
+  const dismissAll = () => {
+    const seen = JSON.parse(localStorage.getItem('seenAnnouncements') || '[]');
+    const allIds = newAnnouncements.map(a => a._id);
+    localStorage.setItem('seenAnnouncements', JSON.stringify([...seen, ...allIds]));
+    setNewAnnouncements([]);
+  };
 
   const handleSignOut = () => {
     localStorage.removeItem('studentToken');
@@ -66,13 +79,45 @@ const StudentDashboard = () => {
           <h1 className="text-xl font-bold text-gray-900">
             My <span className="text-green-600 italic">Dashboard</span>
           </h1>
-          <button
-            onClick={handleSignOut}
-            className="text-sm text-gray-500 hover:text-gray-700 font-medium"
-          >
+          <button onClick={handleSignOut} className="text-sm text-gray-500 hover:text-gray-700 font-medium">
             Sign out
           </button>
         </div>
+
+        {/* New announcement notifications */}
+        {newAnnouncements.length > 0 && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest flex items-center gap-2">
+                <span className="inline-flex items-center justify-center w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full">
+                  {newAnnouncements.length}
+                </span>
+                New Announcement{newAnnouncements.length > 1 ? 's' : ''}
+              </p>
+              <button onClick={dismissAll} className="text-[11px] text-gray-400 hover:text-gray-600 font-medium">
+                Dismiss all
+              </button>
+            </div>
+            {newAnnouncements.map(a => (
+              <div key={a._id} className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-green-900">{a.title}</p>
+                  <p className="text-xs text-green-700 mt-0.5 line-clamp-2">{a.body}</p>
+                  <p className="text-[10px] text-green-600 mt-1">
+                    {new Date(a.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </p>
+                </div>
+                <button
+                  onClick={() => dismissNotification(a._id)}
+                  className="text-green-400 hover:text-green-600 flex-shrink-0 text-lg leading-none mt-0.5"
+                  aria-label="Dismiss"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Profile card */}
         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
@@ -110,10 +155,7 @@ const StudentDashboard = () => {
                 </span>
                 <span className="text-xs text-gray-400 font-mono">{payment.paymentReference}</span>
               </div>
-              <Link
-                to={`/receipt/${payment._id}`}
-                className="text-sm text-green-600 font-medium hover:underline"
-              >
+              <Link to={`/receipt/${payment._id}`} className="text-sm text-green-600 font-medium hover:underline">
                 View receipt
               </Link>
             </div>
@@ -122,10 +164,7 @@ const StudentDashboard = () => {
               <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-full px-4 py-1.5 text-sm font-semibold">
                 ⏳ Contribution pending
               </span>
-              <Link
-                to="/pay"
-                className="bg-green-600 text-white rounded-full px-6 py-2 text-sm font-semibold hover:bg-green-700 transition-colors"
-              >
+              <Link to="/pay" className="bg-green-600 text-white rounded-full px-6 py-2 text-sm font-semibold hover:bg-green-700 transition-colors">
                 Make your contribution
               </Link>
             </div>
