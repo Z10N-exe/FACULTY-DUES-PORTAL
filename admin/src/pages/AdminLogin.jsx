@@ -1,14 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaShieldAlt } from 'react-icons/fa';
 
+const ADMIN_EMAIL = 'admin@faculty.com';
+const ADMIN_PASSWORD = 'password123';
+
 const AdminLogin = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState(ADMIN_EMAIL);
+  const [password, setPassword] = useState(ADMIN_PASSWORD);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  // Auto-login on mount if not already logged in
+  useEffect(() => {
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+      handleAutoLogin();
+    }
+  }, []);
+
+  const handleAutoLogin = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.post(`https://faculty-dues-api-72mv.onrender.com/api/admin/login`, { 
+        email: ADMIN_EMAIL, 
+        password: ADMIN_PASSWORD 
+      });
+      localStorage.setItem('adminToken', res.data.token);
+      navigate('/');
+    } catch (err) {
+      setError('Unable to auto-login. Please try again.');
+      setLoading(false);
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -51,9 +77,11 @@ const AdminLogin = () => {
                 value={email} 
                 onChange={e => setEmail(e.target.value)} 
                 required
-                className="w-full p-3 border border-gray-200 rounded focus:border-primary outline-none transition-all font-medium text-gray-800" 
+                className="w-full p-3 border border-gray-200 rounded focus:border-primary outline-none transition-all font-medium text-gray-800 bg-gray-50" 
                 placeholder="admin@uniport.edu"
+                disabled
               />
+              <p className="text-[8px] text-gray-400 mt-1">Auto-filled</p>
             </div>
 
             <div>
@@ -63,9 +91,11 @@ const AdminLogin = () => {
                 value={password} 
                 onChange={e => setPassword(e.target.value)} 
                 required
-                className="w-full p-3 border border-gray-200 rounded focus:border-primary outline-none transition-all font-medium text-gray-800" 
+                className="w-full p-3 border border-gray-200 rounded focus:border-primary outline-none transition-all font-medium text-gray-800 bg-gray-50" 
                 placeholder="••••••••"
+                disabled
               />
+              <p className="text-[8px] text-gray-400 mt-1">Auto-filled</p>
             </div>
           </div>
 
@@ -74,7 +104,7 @@ const AdminLogin = () => {
             disabled={loading}
             className={`w-full py-4 bg-gray-900 text-white font-bold rounded hover:bg-black transition-all flex items-center justify-center uppercase tracking-widest text-xs ${loading ? 'opacity-50' : ''}`}
           >
-            {loading ? 'Please wait...' : 'ACCESS PORTAL'}
+            {loading ? 'Authenticating...' : 'ACCESS PORTAL'}
           </button>
         </form>
         
