@@ -32,10 +32,10 @@ const Header = () => {
             Home
           </Link>
           <Link
-            to="/pay"
-            className="bg-green-600 text-white rounded-full px-5 py-2 text-sm font-semibold hover:bg-green-700 transition-colors"
+            to="/blog"
+            className={`text-sm font-medium transition-colors ${location.pathname === '/blog' ? 'text-green-600' : 'text-gray-500 hover:text-gray-900'}`}
           >
-            Contribute
+            Blog
           </Link>
           {hasToken ? (
             <Link
