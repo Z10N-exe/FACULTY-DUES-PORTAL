@@ -24,15 +24,20 @@ const Receipt = () => {
   }, [id]);
 
   const downloadPDF = () => {
-    const element = document.getElementById('receipt-content');
-    const opt = {
-      margin: 0,
-      filename: `Receipt-${payment.regNo}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
-    html2pdf().from(element).set(opt).save();
+    try {
+      const element = document.getElementById('receipt-content');
+      const opt = {
+        margin: 0.5,
+        filename: `NACOS-Receipt-${payment.regNo}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().from(element).set(opt).save();
+    } catch (error) {
+      console.error('PDF download error:', error);
+      alert('Failed to download PDF. Please try printing instead.');
+    }
   };
 
   if (loading) return <div className="h-screen flex items-center justify-center font-bold text-gray-400 uppercase tracking-[0.3em] animate-pulse">Verifying...</div>;
@@ -69,7 +74,13 @@ const Receipt = () => {
             </div>
           </div>
           <div className="text-right">
-             <img src={payment.passportUrl} className="h-24 w-24 border border-gray-100 object-cover rounded grayscale" alt="Passport" />
+             <img 
+               src={payment.passportUrl} 
+               className="h-24 w-24 border border-gray-100 object-cover rounded grayscale" 
+               alt="Passport"
+               crossOrigin="anonymous"
+               onError={(e) => { e.target.style.display = 'none'; }}
+             />
           </div>
         </div>
 

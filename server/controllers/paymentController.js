@@ -31,7 +31,7 @@ const initializePayment = async (req, res) => {
       metadata: {
         payment_id: newPayment._id
       },
-      callback_url: `${process.env.CLIENT_URL}/verify`
+      callback_url: 'https://faculty-dues-portal.onrender.com/verify'
     })
 
     const response = await axios.post('https://api.paystack.co/transaction/initialize', params, {
